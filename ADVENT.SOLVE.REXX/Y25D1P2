@@ -1,0 +1,35 @@
+/*--------------------------------------------[REXX]
+| Made with ZAOC by wizard@zdevops.com             |
+| Puzzle: https://adventofcode.com/2025/day/1      |
++-------------------------------------------------*/
+say "Advent of Code 2025 day 1"
+x = bpxwunix('cat /prj/repos/ZAOC/puzzles/y2025d1',,file.,se.)
+
+dial = 50
+p1   = 0
+p2   = 0
+
+do i = 1 to file.0
+  direction = substr(file.i,1,1)
+  amount    = substr(file.i,2)
+  if direction = 'L' then do
+    do j = 1 to amount
+      dial = dial - 1
+      if dial = 0 then p2 = p2 + 1
+      if dial < 0 then dial = 99
+    end
+  end
+  else do
+    do j = 1 to amount
+      dial = dial + 1
+      if dial > 99 then do
+        dial = 0
+        p2 = p2 + 1
+      end
+    end
+  end
+  if dial = 0 then p1 = p1 + 1
+end
+
+say "Part one: " p1
+say "Part two: " p2
