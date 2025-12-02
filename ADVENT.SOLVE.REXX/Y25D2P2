@@ -1,0 +1,61 @@
+/*--------------------------------------------[REXX]
+| Made with ZAOC by wizard@zdevops.com             |
+| Puzzle: https://adventofcode.com/2025/day/2      |
++-------------------------------------------------*/
+NUMERIC DIGITS 13
+
+say "Advent of Code 2025 day 2"
+x = bpxwunix('cat /prj/repos/ZAOC/puzzles/y2025d2',,file.,se.)
+t = TIME('E')
+part2 = 0
+ranges = translate(file.1,' ', ',')
+do i = 1 to words(ranges)
+  range = word(ranges,i)
+  parse var range l'-'r
+  do id = l to r
+    if fasterInvalid(id) then do
+      part2 = part2 + id
+    end
+  end
+  tt = TIME('R')
+  amt = r-l
+  say l 'to' r '('amt') took' tt 'sec. ('amt/tt' tps.)'
+end
+
+say "Part Two:" part2
+exit
+
+invalid: procedure
+  parse arg id
+  l = length(id)
+  do i = 1 to l % 2 /* we only need to check seqs 1/2 length of id */
+    if l // i = 0 then do
+      /* i goes into id a whole number of times */
+      repeats = l % i /* this many times to be precise */
+      seq = substr(id, 1, i) /* with this sequence */
+      /* so if that i-bit length of id 'repeats' times
+         is equal to the id.... it's a repeated sequence */
+      if copies(seq, repeats) = id then return 1
+    end
+  end
+  return 0
+
+fasterInvalid: procedure
+  /* ex. 1 : abcd -> (a)bcdabc(d) has no abcd so no repeats
+     ex. 2 : abab -> (a)bababa(b) has abab so a repeating sequence
+                         ^^^^
+     ex. 3 : 1111 -> (1)111111(1) has 1111 so a repeating sequence
+                        ^^^^
+
+     to check -> is the length of sequence always the pos of
+                 first found? think so. Why?
+  */
+  parse arg id
+  l = length(id)
+  /* double our id */
+  dbl = id || id
+  /* chop off first and last char */
+  inner = substr(dbl, 2, (2*l) -2)
+  /* if our id is still in this string, we've one or more repeats */
+  return pos(id, inner) > 0
+
