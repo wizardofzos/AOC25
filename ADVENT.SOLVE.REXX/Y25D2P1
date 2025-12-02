@@ -1,0 +1,35 @@
+/*--------------------------------------------[REXX]
+| Made with ZAOC by wizard@zdevops.com             |
+| Puzzle: https://adventofcode.com/2025/day/2      |
++-------------------------------------------------*/
+NUMERIC DIGITS 31
+
+say "Advent of Code 2025 day 2"
+x = bpxwunix('cat /prj/repos/ZAOC/puzzles/y2025d2',,file.,se.)
+
+part1 = 0
+
+ranges = translate(file.1,' ', ',')
+do i = 1 to words(ranges)
+  range = word(ranges,i)
+  parse var range l'-'r
+  say l "to" r
+  do id = l to r
+    if invalid(id) then do
+      part1 = part1 + id
+    end
+  end
+end
+
+say "Part One:" part1
+exit
+
+invalid: procedure
+  parse arg id
+  /* uneven length van never have a repeat */
+  if length(id) // 2 <> 0 then return 0
+  seq = substr(id,1,length(id)/2)
+  if id = seq || seq then
+    return 1
+  else
+    return 0
