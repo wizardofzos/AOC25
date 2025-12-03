@@ -1,0 +1,45 @@
+/*--------------------------------------------[REXX]
+| Made with ZAOC by wizard@zdevops.com             |
+| Puzzle: https://adventofcode.com/2025/day/3      |
++-------------------------------------------------*/
+say "Advent of Code 2025 day 3"
+x = bpxwunix('cat /prj/repos/ZAOC/puzzles/y2025d3',,file.,se.)
+
+/*
+file.0 = 4
+file.1 = '987654321111111'
+file.2 = '811111111111119'
+file.3 = '234234234234278'
+file.4 = '818181911112111'
+*/
+
+part1 = 0
+
+do i = 1 to file.0
+  batt1 = 0
+  batt1pos = 0
+  batt2 = 0
+  batt2pos = 0
+  /* find largest left value */
+  do a = 1 to length(file.i)-1
+    v = substr(file.i,a,1)
+    if v > batt1 then do
+      batt1 = v
+      batt1pos = a
+    end
+  end
+  /* get largest to the right of it */
+  do b = batt1pos + 1 to length(file.i)
+    v = substr(file.i,b,1)
+    if v > batt2 then do
+      batt2 = v
+      batt2pos = b
+    end
+  end
+  joltage = batt1 || batt2
+  say file.i
+  say "Joltage:" joltage
+  part1 = part1 + joltage
+end
+
+say "Part One:" part1

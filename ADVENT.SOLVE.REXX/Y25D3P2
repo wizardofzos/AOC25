@@ -1,0 +1,53 @@
+/*--------------------------------------------[REXX]
+| Made with ZAOC by wizard@zdevops.com             |
+| Puzzle: https://adventofcode.com/2025/day/3      |
++-------------------------------------------------*/
+say "Advent of Code 2025 day 3"
+x = bpxwunix('cat /prj/repos/ZAOC/puzzles/y2025d3',,file.,se.)
+
+/* ALWAYS THIS */
+NUMERIC DIGITS 16
+
+/*
+file.0 = 4
+file.1 = '987654321111111'
+file.2 = '811111111111119'
+file.3 = '234234234234278'
+file.4 = '818181911112111'
+*/
+
+
+part2 = 0
+
+do i = 1 to file.0
+  best = getBest(file.i, 12)
+  part2 = part2 + best
+end
+
+say "Part Two:" part2
+
+exit
+
+getBest:
+  parse arg str, k   /* get highest int of k-digits from str */
+  len = length(str)
+  result = ""
+  start = 1  /* we start trying at first digit */
+  do while length(result) < k
+    remaining = k - length(result) /* we need this many more digits */
+    lastStart = len - remaining + 1 /* make sure enough digits left */
+    bestVal = "-1" /* we must do better than this */
+    bestPos = start
+    do p = start to lastStart
+      d = substr(str, p, 1)
+      if d > bestVal then do
+        bestVal = d
+        bestPos = p
+      end
+    end
+
+    result = result || bestVal
+    start = bestPos + 1  /* go select next digit */
+  end
+
+  return result
