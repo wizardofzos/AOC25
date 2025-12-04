@@ -5,3 +5,10 @@
 These are my REXX solutions for Advent of Code 2025. I'm running (and participating) in the Advent of Code for Mainframers Leaderboard.
 
 More information: https://mfaoc.mainframe.community , https://wizardofzos.github.io/zday25-rexx-the-halls/
+
+
+## 📇 ZIGI
+This is a zigi-managed repostiory. More info: https://github.com/zigi/zigi 
+
+## 🎄 ZAOC
+I use my custom 'IDE' for these REXX solutions, you can find it at: https://github.com/wizardofzos/ZAOC
