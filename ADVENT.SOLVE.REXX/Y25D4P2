@@ -1,0 +1,65 @@
+/*--------------------------------------------[REXX]
+| Made with ZAOC by wizard@zdevops.com             |
+| Puzzle: https://adventofcode.com/2025/day/4      |
++-------------------------------------------------*/
+say "Advent of Code 2025 day 4"
+x = bpxwunix('cat /prj/repos/ZAOC/puzzles/y2025d4',,file.,se.)
+
+grid. = 0
+maxx = length(file.1)
+maxy = file.0
+
+do i = 1 to file.0
+  do j = 1 to length(file.i)
+    grid.j.i = substr(file.i,j,1)
+  end
+end
+
+
+part2 = 0
+rolls = 0
+removed = -1 /* amount of rolls we removed */
+cycles = 0
+do while removed /= 0 /* as long as we've removed rolls */
+  removelist = ""
+  removed = 0
+  cycles = cycles + 1
+  say "Removecycle" cycles
+  do y = 1 to maxy
+    do x = 1 to maxx
+      if grid.x.y /= '@' then iterate /* only check rolls */
+      rolls = rolls + 1
+      if neighbours(x,y) < 4 then do
+        removed = removed + 1
+        removelist = removelist || x || ',' || y ' '
+        part2 = part2 + 1
+      end
+    end
+  end
+  /* now remove those rolls and go again */
+  say "Removed" words(removelist) "rolls"
+  do r = 1 to words(removelist)
+    loc = word(removelist,r)
+    parse var loc rx","ry
+    grid.rx.ry = '.'
+  end
+end
+
+say "Part Two:" part2 "rolls out of" rolls "can be moved"
+
+exit
+
+neighbours: procedure expose grid.
+  parse arg sx,sy
+  amt = 0
+  yl1 = sy - 1
+  yl2 = sy + 1
+  xl1 = sx - 1
+  xl2 = sx + 1
+  do ny = yl1 to yl2
+    do nx = xl1 to xl2
+      if nx = sx & ny = sy then iterate
+      if grid.nx.ny = '@' then amt = amt + 1
+    end
+  end
+  return amt
