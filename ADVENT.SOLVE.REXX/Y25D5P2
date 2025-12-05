@@ -1,0 +1,69 @@
+/*--------------------------------------------[REXX]
+| Made with ZAOC by wizard@zdevops.com             |
+| Puzzle: https://adventofcode.com/2025/day/5      |
++-------------------------------------------------*/
+say "Advent of Code 2025 day 5"
+/* WE SORT THE FILE HERE */
+x = bpxwunix('sort -n /prj/repos/ZAOC/puzzles/y2025d5',,file.,se.)
+
+NUMERIC DIGITS 64
+
+
+
+db. = 0
+db.0 = 0
+part2 = 0
+
+do i = 1 to file.0
+  if file.i = '' then iterate /* skip the empty list */
+  parse var file.i l'-'r
+  if r = '' then iterate /* skip the items sorted in */
+  nd = db.0 + 1
+  db.nd.1 = l
+  db.nd.2 = r
+  db.0 = nd
+end
+
+/* we merge into this */
+dbn. = 0
+dbn.0 = 0
+
+/* naive merging algorithm */
+currentStart = db.1.1
+currentEnd   = db.1.2
+
+do i = 2 to db.0
+  l = db.i.1
+  r = db.i.2
+  if l <= currentEnd +1 then do /* we're in the current range */
+    if r > currentEnd then      /* but further out. Let's extend */
+      currentEnd = r
+  end
+  else do
+    /* new range dude */
+    nd = dbn.0 + 1
+    dbn.nd.1 = currentStart
+    dbn.nd.2 = currentEnd
+    dbn.0 = nd
+    currentStart = l
+    currentEnd   = r
+  end
+end
+
+/* add the final range */
+nd = dbn.0 + 1
+dbn.nd.1 = currentStart
+dbn.nd.2 = currentEnd
+dbn.0 = nd
+
+do i = 1 to dbn.0
+  /* just add all the numbers in the range */
+  part2 = part2 + (dbn.i.2 - dbn.i.1) + 1 /* all in range */
+end
+
+
+
+say "Part Two:" part2
+
+exit
+

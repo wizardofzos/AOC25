@@ -1,0 +1,40 @@
+/*--------------------------------------------[REXX]
+| Made with ZAOC by wizard@zdevops.com             |
+| Puzzle: https://adventofcode.com/2025/day/5      |
++-------------------------------------------------*/
+say "Advent of Code 2025 day 5"
+x = bpxwunix('cat /prj/repos/ZAOC/puzzles/y2025d5',,file.,se.)
+what = 'ranges'
+
+db. = 0
+part1 = 0
+
+do i = 1 to file.0
+  if what = 'ingredients' then do
+    a = file.i
+    fresh = 0
+    do j = 1 to db.0
+      if a >= db.j.1 & a <= db.j.2 then do
+        fresh = 1
+        /* no need other range checks */
+        j = db.0 + 1
+      end
+    end
+    if fresh then part1 = part1 + 1
+  end
+
+  if what = 'ranges' then do
+    if file.i = '' then what = 'ingredients'
+    else do
+      parse var file.i l'-'r
+      nd = db.0 + 1
+      db.nd.1 = l
+      db.nd.2 = r
+      nd = nd + 1
+      db.0 = nd
+    end
+  end
+
+end
+
+say "Part One:" part1
