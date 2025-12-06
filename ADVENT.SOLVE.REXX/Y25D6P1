@@ -1,0 +1,52 @@
+/*--------------------------------------------[REXX]
+| Made with ZAOC by wizard@zdevops.com             |
+| Puzzle: https://adventofcode.com/2025/day/6      |
++-------------------------------------------------*/
+say "Advent of Code 2025 day 6"
+x = bpxwunix('cat /prj/repos/ZAOC/puzzles/y2025d6',,file.,se.)
+
+NUMERIC DIGITS 31
+
+/*
+file.1 = '123 328  51 64'
+file.2 = '45 64  387 23'
+file.3 = '6 98  215 314'
+file.4 = '*   +   *   + '
+file.0 = 4
+*/
+
+problems. = 0
+opcount = file.0 - 1
+operators = file.0
+
+/* read the problems */
+do i = 1 to opcount
+  do p = 1 to words(file.i)
+    problems.p.i = word(file.i, p)
+    problems.p.0 = i
+  end
+  problems.0 = p
+end
+
+/* read the operators */
+ops. = 0
+do i = 1 to words(file.operators)
+  ops.i = word(file.operators,i)
+  ops.0 = i
+end
+
+/* let's do some homework */
+part1 = 0
+do p = 1 to problems.0 - 1
+  pstr = ''
+  do v = 1 to problems.p.0
+    pstr = pstr problems.p.v
+  end
+  pstr = strip(pstr)
+  pstr = translate(pstr, ops.p, ' ')
+  doit = "part1 = part1 + (" pstr ")"
+  /* Do not ever do this :) */
+  interpret(doit)
+end
+
+say "Part One:" part1
