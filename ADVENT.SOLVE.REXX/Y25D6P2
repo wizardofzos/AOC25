@@ -6,61 +6,51 @@ say "Advent of Code 2025 day 6"
 x = bpxwunix('cat /prj/repos/ZAOC/puzzles/y2025d6',,file.,se.)
 
 
-file.1 = '123 328  51 64'
-file.2 = ' 45 64  387 23'
+NUMERIC DIGITS 31
+
+/*
+file.1 = '123 328  51 64 '
+file.2 = ' 45 64  387 23 '
 file.3 = '  6 98  215 314'
 file.4 = '*   +   *   + '
 file.0 = 4
+*/
 
 oplineid = file.0
+part2 = 0
+op = words(file.oplineid) /* we start with the last operator */
+all = length(file.1)
+fullhw = ''
 
-homework. = ''
-homework.0 = 0
-
-/* assume all line same nr. of cols */
-cols = words(file.1)
-
-do i = cols to 1 by -1
-  operator = word(file.oplineid,i)
-  say "new Homework, operator =" operator
-  hw. = ''
-  l = 0
-  do j = 1 to file.0 -1
-    number = word(file.j,i)
-    if length(number) > l then l = length(number)
-    hw.j = number
-    hw.0 = j
-  end
-  do n = 1 to hw.0
-    spaces  = l - length(hw.n)
-    nhw = strip(hw.n)
-    nhw = nhw || copies(' ', spaces)
-    hw.n = nhw
-    say hw.n
+do col = all to 1 by -1
+  /* loop cols right to left */
+  /* if ' ' on all lines we have new homework */
+  /* id col = 1 we have the last homework */
+  hw = ''
+  do line = 1 to file.0 - 1
+    /* loop lines top to bottom */
+    hw = hw || substr(file.line,col,1)
   end
 
-  /* Now we need to transpose that stem right to left */
-  grid. = 0
-  do x = 1 to hw.0
-    do y = 1 to l
-      val = substr(hw.x,y,1)
-      grid.x.y = val
-      say x "," y "=" val
+  fullhw = fullhw hw
+  if strip(hw) = '' | col = 1 then do
+    /* if we get the 'empty col in between' or first col.. we done */
+    oper = word(file.oplineid, op) /* get our operator */
+    fullhw = strip(fullhw)         /* get rid of whitespace around us */
+    doit = ''                      /* build the math */
+    do f = 1 to words(fullhw)      /* - take all values */
+      doit = doit word(fullhw,f)   /* - mash to doit (removes spaces) */
     end
+    doit = strip(doit)             /* get rid of starter space */
+    betweenres = translate(doit,oper,' ') /* turn space in operator */
+    doit = 'part2 = part2 +  (' translate(doit,oper,' ') ')'
+    interpret (doit) /* Again: use this only with care :) */
+    op = op - 1      /* move an operator back */
+    fullhw = ''      /* reset homework string */
   end
-
-  pstr = ''
-
-  do x = l to 1 by -1
-    todo = ''
-    do y = 1 to oplineid -1
-      if grid.y.x /= '' then todo = todo || grid.y.x
-    end
-    pstr = pstr todo
-  end
-  pstr = strip(pstr)
-  doit = 'part2 = part2 + (' translate(pstr,operator,' ')   ')'
-  say doit
 end
+
+
+say "Part Two:" part2
 
 exit
