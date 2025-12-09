@@ -1,0 +1,146 @@
+/*--------------------------------------------[REXX]
+| Made with ZAOC by wizard@zdevops.com             |
+| Puzzle: https://adventofcode.com/2025/day/8      |
++-------------------------------------------------*/
+say "Advent of Code 2025 day 8"
+NUMERIC DIGITS 14
+
+x = bpxwunix('cat /prj/repos/ZAOC/puzzles/y2025d8',,file.,se.)
+
+file.1  =  '162,817,812'
+file.2  =  '57,618,57'
+file.3  =  '906,360,560'
+file.4  =  '592,479,940'
+file.5  =  '352,342,300'
+file.6  =  '466,668,158'
+file.7  =  '542,29,236'
+file.8  =  '431,825,988'
+file.9  =  '739,650,466'
+file.10 =  '52,470,668'
+file.11 =  '216,146,977'
+file.12 =  '819,987,18'
+file.13 =  '117,168,530'
+file.14 =  '805,96,715'
+file.15 =  '346,949,466'
+file.16 =  '970,615,88'
+file.17 =  '941,993,340'
+file.18 =  '862,61,35'
+file.19 =  '984,92,344'
+file.20 =  '425,690,689'
+file.0  = 20
+
+start = time('R')
+
+answer = 0
+circuits. = 0
+circuits.0 = 0
+conns. = ''
+conns.0 = 0
+distances. = 0
+
+do i = 1 to file.0
+  if i // 10  = 0 then
+    say TIME() "D calc, i="i "elaps:" TIME('E')
+  do j = 1 to file.0
+    if i = j then iterate
+    if distances.i.j /= 0 then iterate
+    d = distance(file.i,file.j)
+    distances.i.j = d
+    distances.j.i = d
+  end
+end
+
+say TIME() "all d calculted"
+
+
+do howmany = 1 to 11
+  say TIME() "cycle" howmany TIME('E')
+  shortest = 10000000000000000000000000
+  ci = 0
+  cj = 0
+  donelist. = 0
+  do i = 1 to file.0
+    do j = 1 to file.0
+      if i = j then iterate
+      if donelist.i.j /= 0 then iterate
+      d = distances.i.j
+      havecon = 0
+      do cc = 1 to conns.0
+        if conns.cc.1 = i & conns.cc.2 = j then havecon=1
+        if conns.cc.2 = i & conns.cc.1 = j then havecon=1
+      end
+      if havecon = 1 then do
+        iterate
+      end
+      if d < shortest then do
+        shortest = d
+        ci = i
+        cj = j
+      end
+      donelist.i.j = 1
+    end
+  end
+  /* ci cj is shortest add this to list of direct connections */
+  nc = conns.0 + 1
+  conns.nc.1 = ci
+  conns.nc.2 = cj
+  conns.0  = nc
+  /* find a circuit to connect to or create a new one */
+  found = 0
+  do c = 1 to circuits.0
+    if wordpos(ci, circuits.c) > 0 | wordpos(cj, circuits.c) >0 then do
+      found = 1
+      /* add tho this */
+      if wordpos(cj, circuits.c) = 0 then circuits.c = circuits.c cj
+      if wordpos(ci, circuits.c) = 0 then circuits.c = circuits.c ci
+      c = circuits.0 + 1
+    end
+  end
+  /* after adding we can have added to one.... but that merges
+     two circuits c = cir.0 + 1 breaks that? */
+  if found = 0 then do
+    nc = circuits.0 + 1
+    circuits.nc = ci cj
+    circuits.0 = nc
+  end
+end
+
+sizes = ''
+
+do u = 1 to circuits.0
+  say u "->" circuits.u
+  sizes = sizes words(circuits.u)
+end
+
+say sizes
+answer = words(circuits.1) * words(circuits.2) * words(circuits.3)
+
+
+elaps = time('E')-start
+say 'Part One:' answer
+say 'Elapse: 'elaps
+
+exit
+
+
+distance: procedure
+  parse arg loc1, loc2
+  parse var loc1 lx1","ly1","lz1
+  parse var loc2 lx2","ly2","lz2
+  dx = lx1 - lx2
+  dy = ly1 - ly2
+  dz = lz1 - lz2
+
+  ans = (dx*dx) + (dy*dy) + (dz*dz)
+  return sqrt(ans)
+
+sqrt: procedure
+  parse arg val
+  xnew = val
+  eps = 0.5 * 10**(1+fuzz()-digits())
+  do until abs(xold-xnew) < (eps*xnew)
+    xold = xnew
+    xnew = 0.5 * (xold+val/xold)
+  end
+
+  return xnew
