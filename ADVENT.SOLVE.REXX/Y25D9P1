@@ -1,0 +1,39 @@
+/*--------------------------------------------[REXX]
+| Made with ZAOC by wizard@zdevops.com             |
+| Puzzle: https://adventofcode.com/2025/day/9      |
++-------------------------------------------------*/
+say "Advent of Code 2025 day 9"
+x = bpxwunix('cat /prj/repos/ZAOC/puzzles/y2025d9',,file.,se.)
+NUMERIC DIGITS 10
+start = time('R')
+answer = 0
+locs   = ''
+
+/*
+file.1   = '7,1'
+file.2   = '11,1'
+file.3   = '11,7'
+file.4   = '9,7'
+file.5   = '9,5'
+file.6   = '2,5'
+file.7   = '2,3'
+file.8   = '7,3'
+file.0   = 8
+*/
+
+do i = 1 to file.0
+  do j = 1 to file.0
+    if i = j then iterate
+    parse var file.i a1","b1
+    parse var file.j a2","b2
+    a = (abs(a1-a2)+1) * (abs(b1-b2)+1)
+    if a > answer then do
+      answer = a
+      locs = file.i file.j
+    end
+  end
+end
+elaps = time('E')-start
+say 'Part One:' answer
+say locs
+say 'Elapse: 'elaps
