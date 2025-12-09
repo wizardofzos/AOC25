@@ -1,0 +1,73 @@
+/*--------------------------------------------[REXX]
+| Made with ZAOC by wizard@zdevops.com             |
+| Puzzle: https://adventofcode.com/2025/day/7      |
++-------------------------------------------------*/
+say "Advent of Code 2025 day 7"
+x = bpxwunix('cat /prj/repos/ZAOC/puzzles/y2025d7',,file.,se.)
+start = time('R')
+answer = 0
+
+grid. = 0
+gridwith = length(file.1)
+beams. = 0
+
+
+/* Build our grid location thing */
+do i = 1 to file.0
+  do j = 1 to length(file.i)
+    grid.j.i = substr(file.i,j,1)
+    if grid.j.i = 'S' then beamlist = j
+  end
+end
+
+say 'Tachyon beam entrypoint in manifold' beamlist
+beams.beamlist = 1
+
+answer = 0
+elaps = time('E')-start
+do y = 1 to file.0
+  newbeams = ''
+  do b = 1 to length(file.1)
+    if beams.b = 1 & substr(file.y,b,1) = '^' then do
+      beams.b = 0
+      l = b - 1
+      r = b + 1
+      beams.l = 1
+      beams.r = 1
+      answer = answer + 1
+      newbeams = l r
+    end
+  end
+  /* line print */
+  line = ''
+  do x = 1 to length(file.1)
+    if beams.x = 1 then line = line || '|'
+    else line = line || '.'
+  end
+  say line
+end
+
+
+say 'Part One:' answer
+say 'Elapse: 'elaps
+
+exit
+
+appendBeam: procedure
+  parse arg beamlist,beam
+  beamlist = beamlist beam
+  return beamlist
+
+removeBeam: procedure
+  parse arg beamlist,beam
+  nb = ''
+  do i = 1 to words(beamlist)
+    b = word(beamlist,i)
+    if b /= beam then do
+      nb = nb b
+    end
+  end
+  say "removeBeam, in="beamlist "out=" nb
+  say "Remove="beam
+  return nb
+
